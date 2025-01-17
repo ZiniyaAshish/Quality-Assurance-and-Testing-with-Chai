@@ -1,4 +1,5 @@
 const chai = require('chai');
+const Browser = require('zombie');
 const assert = chai.assert;
 
 const server = require('../server');
@@ -81,7 +82,7 @@ suite('Functional Tests', function () {
   });
 });
 
-const Browser = require('zombie');
+
 Browser.site = 'http://localhost:3000';
 
 suite('Functional Tests with Zombie.js', function () {
@@ -124,12 +125,17 @@ suite('Functional Tests with Zombie.js', function () {
 
     // #6
     test('Submit "surname" : "Vespucci" in the HTML form', function (done) {
-      browser.fill('surname', 'Vespucci');
-      browser.pressButton('submit', function () {
+      browser.fill('surname', 'Vespucci')
+      browser.pressButton('submit', function() {
+        // assert that status is OK 200
         browser.assert.success();
+        // assert that the text inside the element 'span#name' is 'Amerigo'
         browser.assert.text('span#name', 'Amerigo');
+        // assert that the text inside the element 'span#surname' is 'Vespucci'
         browser.assert.text('span#surname', 'Vespucci');
+        // assert that the element(s) 'span#dates' exist and their count is 1
         browser.assert.element('span#dates', 1);
+    
         done();
       });
     });
